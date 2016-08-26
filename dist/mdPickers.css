@@ -338,20 +338,17 @@ mdp-calendar {
   padding: 15px;
 }
 .mdp-timepicker .mdp-timepicker-selected-time {
-  font-size: 3rem;
-}
-.mdp-timepicker:not(.portrait) .mdp-timepicker-time {
-  width: 138px;
-}
-.mdp-timepicker.portrait .mdp-timepicker-selected-time {
-  font-size: 4rem;
-  margin-right: 1.5rem;
+  font-size: 38px;
+  margin-right: 5px;
 }
 mdp-time-picker md-input-container.md-has-icon {
   padding-left: 40px;
 }
 mdp-time-picker .md-button.md-icon-button {
   margin: 18px 0 0 0;
+}
+.mdp-timepicker md-toolbar.mdp-timepicker-time {
+  padding: 5px;
 }
 .mdp-timepicker-selected-time > span,
 .mdp-timepicker-selected-ampm > span {
@@ -365,6 +362,9 @@ mdp-time-picker .md-button.md-icon-button {
 .mdp-timepicker-selected-time > span.active,
 .mdp-timepicker-selected-ampm > span.active {
   opacity: 1;
+}
+.mdp-timepicker-selected-ampm {
+  font-size: 14px;
 }
 .mdp-clock-deg0 {
   top: 0%;

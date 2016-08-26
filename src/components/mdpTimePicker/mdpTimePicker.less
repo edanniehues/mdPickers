@@ -89,20 +89,8 @@
     }
     
     .mdp-timepicker-selected-time {
-        font-size: 3rem;
-    }
-    
-    &:not(.portrait) {
-        .mdp-timepicker-time {
-            width: 138px;
-        }
-    }
-    
-    &.portrait {
-        .mdp-timepicker-selected-time {
-            font-size: 4rem;
-            margin-right: 1.5rem;
-        }
+        font-size: 38px;
+        margin-right: 5px;
     }
 }
 
@@ -119,6 +107,10 @@ mdp-time-picker {
     }
 }
 
+.mdp-timepicker md-toolbar.mdp-timepicker-time {
+	padding: 5px;
+}
+
 .mdp-timepicker-selected-time > span,
 .mdp-timepicker-selected-ampm > span {
     outline: 0;
@@ -131,6 +123,10 @@ mdp-time-picker {
     &.active {
         opacity: 1;    
     }
+}
+
+.mdp-timepicker-selected-ampm {
+	font-size: 14px;
 }
 
 .generate-degree-classes(30);

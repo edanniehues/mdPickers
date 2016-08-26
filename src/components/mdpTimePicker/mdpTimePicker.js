@@ -13,8 +13,12 @@ function TimePickerCtrl($scope, $mdDialog, time, autoSwitch, $mdMedia) {
     
 	$scope.$mdMedia = $mdMedia;
 	
-	this.switchView = function() {
-	    self.currentView = self.currentView == self.VIEW_HOURS ? self.VIEW_MINUTES : self.VIEW_HOURS;
+	this.switchView = function(close) {
+		if(self.currentView == self.VIEW_HOURS) {
+			self.currentView = self.VIEW_MINUTES;
+		} else if(close) {
+			this.confirm();
+		}
 	};
     
 	this.setAM = function() {
@@ -81,15 +85,20 @@ function ClockCtrl($scope) {
             case TYPE_MINUTES:
                 divider = 60;
                 break;
-        }  
+        }
+        
+        var time = Math.round(divider / 360 * deg);
         
         self.setTime(
-            Math.round(divider / 360 * deg)
+            time
         );
+        return time;
     };
     
     this.setTime = function(time, type) {
+    	this.oldSelected = this.selected;
         this.selected = time;
+        console.log('setTime: ' + time);
         
         switch(self.type) {
             case TYPE_HOURS:
@@ -158,8 +167,8 @@ module.directive("mdpClock", ["$animate", "$timeout", function($animate, $timeou
 
                 var deg = Math.round((Math.atan2(x, y) * (180 / Math.PI)));
                 $timeout(function() {
-                    ctrl.setTimeByDeg(deg + 180);
-                    if(ctrl.autoSwitch && ["mouseup", "click"].indexOf(event.type) !== -1 && timepickerCtrl) timepickerCtrl.switchView();
+                    console.log(ctrl.selected == ctrl.oldSelected);
+                    if(ctrl.autoSwitch && ["mouseup", "click"].indexOf(event.type) !== -1 && timepickerCtrl) timepickerCtrl.switchView(ctrl.selected == ctrl.oldSelected);
                 });
             }; 
             
@@ -201,9 +210,9 @@ module.provider("$mdpTimePicker", function() {
                 controller:  ['$scope', '$mdDialog', 'time', 'autoSwitch', '$mdMedia', TimePickerCtrl],
                 controllerAs: 'timepicker',
                 clickOutsideToClose: true,
-                template: '<md-dialog aria-label="" class="mdp-timepicker" ng-class="{ \'portrait\': !$mdMedia(\'gt-xs\') }">' +
-                            '<md-dialog-content layout-gt-xs="row" layout-wrap>' +
-                                '<md-toolbar layout-gt-xs="column" layout-xs="row" layout-align="center center" flex class="mdp-timepicker-time md-hue-1 md-primary">' +
+                template: '<md-dialog aria-label="" class="mdp-timepicker">' +
+                            '<md-dialog-content layout="column" layout-wrap>' +
+                                '<md-toolbar layout="row" layout-align="center center" flex class="mdp-timepicker-time md-hue-1 md-primary">' +
                                     '<div class="mdp-timepicker-selected-time">' +
                                         '<span ng-class="{ \'active\': timepicker.currentView == timepicker.VIEW_HOURS }" ng-click="timepicker.currentView = timepicker.VIEW_HOURS">{{ timepicker.time.format("h") }}</span>:' + 
                                         '<span ng-class="{ \'active\': timepicker.currentView == timepicker.VIEW_MINUTES }" ng-click="timepicker.currentView = timepicker.VIEW_MINUTES">{{ timepicker.time.format("mm") }}</span>' +
@@ -221,8 +230,8 @@ module.provider("$mdpTimePicker", function() {
                                     
                                     '<md-dialog-actions layout="row">' +
 	                                	'<span flex></span>' +
-                                        '<md-button ng-click="timepicker.cancel()" aria-label="' + LABEL_CANCEL + '">' + LABEL_CANCEL + '</md-button>' +
-                                        '<md-button ng-click="timepicker.confirm()" class="md-primary" aria-label="' + LABEL_OK + '">' + LABEL_OK + '</md-button>' +
+                                        '<md-button ng-click="timepicker.cancel()" class="md-raised" aria-label="' + LABEL_CANCEL + '">' + LABEL_CANCEL + '</md-button>' +
+                                        '<md-button ng-click="timepicker.confirm()" class="md-warn md-raised" aria-label="' + LABEL_OK + '">' + LABEL_OK + '</md-button>' +
                                     '</md-dialog-actions>' +
                                 '</div>' +
                             '</md-dialog-content>' +
