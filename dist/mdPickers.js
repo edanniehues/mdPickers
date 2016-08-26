@@ -119,6 +119,16 @@ function DatePickerCtrl($scope, $mdDialog, $mdMedia, $timeout, currentDate, opti
         self.animate();
     };
     
+    this.previousYear = function() {
+    	var year = +this.date.format('YYYY') - 1;
+    	this.selectYear(year);
+    };
+    
+    this.nextYear = function() {
+    	var year = +this.date.format('YYYY') + 1;
+    	this.selectYear(year);
+    };
+    
     this.showYear = function() { 
         self.yearTopIndex = (self.date.year() - self.yearItems.START) + Math.floor(self.yearItems.PAGE_SIZE / 2);
         self.yearItems.currentIndex_ = (self.date.year() - self.yearItems.START) + 1;
@@ -185,13 +195,12 @@ module.provider("$mdpDatePicker", function() {
                 clickOutsideToClose: true,
                 template: '<md-dialog aria-label="" class="mdp-datepicker" ng-class="{ \'portrait\': !$mdMedia(\'gt-xs\') }">' +
                             '<md-dialog-content layout="row" layout-wrap>' +
-                                '<div layout="column" layout-align="start center">' +
-                                    '<md-toolbar layout-align="start start" flex class="mdp-datepicker-date-wrapper md-hue-1 md-primary" layout="column">' +
-                                        '<span class="mdp-datepicker-year" ng-click="datepicker.showYear()" ng-class="{ \'active\': datepicker.selectingYear }">{{ datepicker.date.format(\'YYYY\') }}</span>' +
-                                        '<span class="mdp-datepicker-date" ng-click="datepicker.showCalendar()" ng-class="{ \'active\': !datepicker.selectingYear }">{{ datepicker.date.format(datepicker.displayFormat) }}</span> ' +
-                                    '</md-toolbar>' + 
-                                '</div>' +  
-                                '<div>' + 
+                                '<div>' +
+                                	'<md-toolbar class="md-hue-1 md-primary" layout="row" layout-align="space-between center" style="padding-left: 10px; padding-right: 5px; min-height: 0">' +
+								        '<md-button aria-label="previous year" class="md-icon-button" ng-click="datepicker.previousYear()"><md-icon md-svg-icon="mdp-chevron-left"></md-icon></md-button>' +
+								        '<div style="cursor: pointer" class="mdp-calendar-monthyear" ng-click="datepicker.showYear()">{{ datepicker.date.format(\'YYYY\') }}</div>' +
+								        '<md-button aria-label="next year" class="md-icon-button" ng-click="datepicker.nextYear()"><md-icon md-svg-icon="mdp-chevron-right"></md-icon></md-button>' +
+								    '</md-toolbar>' + 
                                     '<div class="mdp-datepicker-select-year mdp-animation-zoom" layout="column" layout-align="center start" ng-if="datepicker.selectingYear">' +
                                         '<md-virtual-repeat-container md-auto-shrink md-top-index="datepicker.yearTopIndex">' +
                                             '<div flex md-virtual-repeat="item in datepicker.yearItems" md-on-demand class="repeated-year">' +
@@ -301,7 +310,7 @@ module.directive("mdpCalendar", ["$animate", function($animate) {
         template: '<div class="mdp-calendar">' +
                     '<div layout="row" layout-align="space-between center">' +
                         '<md-button aria-label="previous month" class="md-icon-button" ng-click="calendar.prevMonth()"><md-icon md-svg-icon="mdp-chevron-left"></md-icon></md-button>' +
-                        '<div class="mdp-calendar-monthyear" ng-show="!calendar.animating">{{ calendar.date.format("MMMM YYYY") }}</div>' +
+                        '<div class="mdp-calendar-monthyear" ng-show="!calendar.animating">{{ calendar.date.format("MMMM") }}</div>' +
                         '<md-button aria-label="next month" class="md-icon-button" ng-click="calendar.nextMonth()"><md-icon md-svg-icon="mdp-chevron-right"></md-icon></md-button>' +
                     '</div>' +
                     '<div layout="row" layout-align="space-around center" class="mdp-calendar-week-days" ng-show="!calendar.animating">' +
@@ -577,6 +586,7 @@ module.directive("mdpDatePicker", ["$mdpDatePicker", "$timeout", function($mdpDa
         }
     }
 }]);
+
 /* global moment, angular */
 
 function TimePickerCtrl($scope, $mdDialog, time, autoSwitch, $mdMedia) {
