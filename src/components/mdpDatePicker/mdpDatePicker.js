@@ -1,5 +1,14 @@
 /* global moment, angular */
 
+var supportsDate = false;
+try {
+	var input = document.createElement('input');
+	input.type = 'date';
+	if(input.type === 'date') {
+		supportsDate = true;
+	}
+} catch(e) {}
+
 function DatePickerCtrl($scope, $mdDialog, $mdMedia, $timeout, currentDate, options) {
     var self = this;
 
@@ -344,7 +353,7 @@ module.directive("mdpDatePicker", ["$mdpDatePicker", "$timeout", function($mdpDa
                         '<md-icon md-svg-icon="mdp-event"></md-icon>' +
                     '</md-button>' +
                     '<md-input-container' + (noFloat ? ' md-no-float' : '') + ' md-is-error="isError()">' +
-                        '<input type="{{ ::type }}"' + (angular.isDefined(attrs.mdpDisabled) ? ' ng-disabled="disabled"' : '') + ' aria-label="' + placeholder + '" placeholder="' + placeholder + '"' + (openOnClick ? ' ng-click="showPicker($event)" ' : '') + ' />' +
+                        '<input' + (supportsDate ? '' : ' readonly="readonly"' ) + ' type="{{ ::type }}"' + (angular.isDefined(attrs.mdpDisabled) ? ' ng-disabled="disabled"' : '') + ' aria-label="' + placeholder + '" placeholder="' + placeholder + '"' + (openOnClick ? ' ng-click="showPicker($event)" ' : '') + ' />' +
                     '</md-input-container>' +
                 '</div>';
         },
@@ -374,7 +383,7 @@ module.directive("mdpDatePicker", ["$mdpDatePicker", "$timeout", function($mdpDa
                 var messages = angular.element(inputContainer[0].querySelector("[ng-messages]"));
                 
                 scope.type = scope.dateFormat ? "text" : "date"
-                scope.dateFormat = scope.dateFormat || "YYYY-MM-DD";
+                scope.dateFormat = scope.dateFormat || (supportsDate ? "YYYY-MM-DD" : "DD/MM/YYYY");
                 scope.model = ngModel;
                 
                 scope.isError = function() {
